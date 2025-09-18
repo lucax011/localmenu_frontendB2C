@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  localmenu-web:
+    build: .
+    ports:
+      - "5173:5173"
+      - "8081:8081"
+    environment:
+      - EXPO_PUBLIC_API_BASE_URL=http://host.docker.internal:3000
+    volumes:
+      - .:/app
+    command: pnpm expo start --web
+  cypress:
+    image: cypress/included:13.6.2
+    working_dir: /e2e
+    volumes:
+      - ./e2e:/e2e
+      - ./src:/app/src
+    environment:
+      - CYPRESS_baseUrl=http://localmenu-web:5173
+    depends_on:
+      - localmenu-web

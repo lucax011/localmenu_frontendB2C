@@ -1,24 +1,32 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "strict": true,
-    "jsx": "react",
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext", "dom"],
+    "jsx": "react-native",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "strict": true,
+    "baseUrl": "./src",
     "paths": {
-      "@shared/*": ["shared/*"],
-      "@apps/*": ["apps/*"]
+      "@app/*": ["app/*"],
+      "@screens/*": ["screens/*"],
+      "@components/*": ["components/*"],
+      "@store/*": ["store/*"],
+      "@services/*": ["services/*"],
+      "@hooks/*": ["hooks/*"],
+      "@theme/*": ["theme/*"],
+      "@utils/*": ["utils/*"],
+      "@types/*": ["types/*"],
+      "@config/*": ["config/*"],
+      "@mocks/*": ["mocks/*"]
     }
   },
-  "include": [
-    "apps/**/*",
-    "shared/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js"]
 }

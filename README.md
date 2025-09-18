@@ -1,63 +1,99 @@
-# localmenu-frontend
 
-## Overview
-localmenu-frontend is a modular frontend application designed to support multiple client applications, each with its own configuration and components. The project is structured to facilitate code sharing and reuse through a shared components library and hooks.
+# Local Menu B2C
 
-## Project Structure
+## Descrição
+App React Native (Expo + TypeScript) para consumidores, rodando 100% local (sem cloud), com integração ao backend NestJS via Docker e pipeline Jenkins.
+
+## Stack
+- React Native (Expo managed workflow, TypeScript)
+- Navegação: @react-navigation/native, stack/bottom-tabs
+- Estado: Zustand
+- Data fetching/cache: React Query
+- HTTP: Axios (JWT interceptor)
+- UI: React Native Paper (tema claro/escuro), expo/vector-icons
+- Geolocalização: expo-location
+- Formulários: react-hook-form + zod
+- Testes: Jest, React Native Testing Library, Cypress (E2E via Expo Web)
+- Lint/format: ESLint, Prettier, Husky, lint-staged
+- Integração: Docker, Jenkins
+
+## Estrutura de Pastas
 ```
-localmenu-frontend/
-├── apps/
-│   ├── cliente/          # Client application for individual users
-│   ├── business/         # Client application for business users
-├── shared/               # Shared components, hooks, themes, and types
-├── package.json          # Main npm configuration for the project
-├── tsconfig.json         # TypeScript configuration for the project
-└── README.md             # Project documentation
-```
-
-## Getting Started
-
-### Prerequisites
-- Node.js (version 14 or higher)
-- npm (version 6 or higher)
-
-### Installation
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   ```
-2. Navigate to the project directory:
-   ```
-   cd localmenu-frontend
-   ```
-3. Install dependencies:
-   ```
-   npm install
-   ```
-
-### Running the Applications
-To run either the cliente or business applications, navigate to the respective application directory and start the development server.
-
-For the cliente application:
-```
-cd apps/cliente
-npm start
+src/
+  app/           # Rotas e navegadores
+  screens/       # Telas principais
+  components/    # Componentes reutilizáveis
+  store/         # Zustand store
+  services/api/  # Axios, React Query, DTOs
+  hooks/         # Custom hooks
+  theme/         # Tema Paper
+  utils/         # Utilitários
+  types/         # Tipos globais
+  config/        # Configurações
+  mocks/         # Dados mockados
+  test/          # Testes unitários
+  e2e/           # Cypress E2E
 ```
 
-For the business application:
-```
-cd apps/business
-npm start
+## Configuração
+- `.env` e `.env.example`:
+  - `EXPO_PUBLIC_API_BASE_URL=http://localhost:3000`
+- `app.json`: schemas, permissões, nome, ícones
+- `tsconfig.json`, `babel.config.js`, `metro.config.js`
+
+## Docker
+- `Dockerfile`: build e dev web
+- `docker-compose.yml`: sobe app web e Cypress para E2E
+
+## Jenkins
+- `Jenkinsfile`: install, lint, test:unit, test:e2e:web, build:web, docker
+
+## Testes
+- Unitários: Jest + Testing Library
+- E2E: Cypress (Expo Web)
+
+## Execução Local
+```sh
+pnpm install
+pnpm expo start
 ```
 
-### Building the Applications
-To build the applications for production, run the following command in the respective application directory:
-```
-npm run build
+## Execução Docker (Web + E2E)
+```sh
+docker-compose up --build
 ```
 
-## Shared Components
-The `shared` directory contains reusable components and hooks that can be utilized across different applications. This promotes consistency and reduces code duplication.
+## Pipeline Jenkins
+- Instala dependências
+- Lint
+- Testes unitários
+- Testes E2E (web)
+- Build web
+- Build Docker local
+
+## Decisões Técnicas
+- Zustand para estado global (leve)
+- React Query para cache/fetch
+- Expo managed workflow para agilidade
+- Cypress para E2E web (POC)
+- Sem cloud: tudo local
+
+## Limitações
+- E2E apenas via web (Expo Web)
+- Backend simulado/local
+- Armazenamento de imagens via URLs públicas
+
+## Roadmap
+- Melhorar mocks e simulação de backend
+- Expandir testes E2E mobile
+- Adicionar autenticação social
+- Refatorar para micro frontends
+
+## Troubleshooting
+- Verifique variáveis `.env`
+- Backend deve estar rodando em `http://localhost:3000`
+- Use `pnpm` para instalar dependências
+- Para mobile, use Expo Go
 
 ## Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
