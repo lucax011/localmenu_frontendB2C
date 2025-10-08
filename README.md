@@ -54,9 +54,92 @@ src/
 
 ## Execução Local
 ```sh
-pnpm install
-pnpm expo start
+npm install --legacy-peer-deps
+npm start
+# or
+npx expo start
 ```
+
+Para desenvolvimento web:
+```sh
+npx expo start --web
+```
+
+## API Backend Endpoints
+
+Este app consome os seguintes endpoints públicos do backend:
+
+### GET /public/restaurants
+Retorna lista de restaurantes com menus publicados.
+
+**Resposta:**
+```json
+[
+  {
+    "id": 1,
+    "name": "Restaurant Name",
+    "slug": "restaurant-slug",
+    "menuId": 1
+  }
+]
+```
+
+### GET /public/r/:slug
+Retorna detalhes do restaurante e seu menu completo.
+
+**Parâmetros:**
+- `slug`: slug único do restaurante
+
+**Resposta:**
+```json
+{
+  "restaurant": {
+    "id": 1,
+    "name": "Restaurant Name"
+  },
+  "menu": {
+    "id": 1,
+    "name": "Menu Name",
+    "categories": [
+      {
+        "id": 1,
+        "name": "Category Name",
+        "order": 1,
+        "items": [
+          {
+            "id": 1,
+            "name": "Item Name",
+            "price": 12.99,
+            "description": "Item description",
+            "isAvailable": true
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Funcionalidades B2C MVP
+
+### Tela Home
+- Lista todos os restaurantes disponíveis
+- Cada restaurante é clicável e navega para a página do menu
+- Exibe mensagem de carregamento durante fetch
+- Trata erros de conexão com botão de retry
+
+### Tela de Menu do Restaurante
+- Exibe nome do restaurante e nome do menu
+- Mostra categorias organizadas com seus itens
+- Busca em tempo real: filtra itens por nome (case-insensitive)
+- Indica itens indisponíveis
+- Exibe preço e descrição de cada item
+
+### Busca de Itens
+- Input de busca no topo da tela de menu
+- Filtragem client-side em memória
+- Case-insensitive
+- Filtra através de todas as categorias simultaneamente
 
 ## Execução Docker (Web + E2E)
 ```sh
@@ -90,10 +173,11 @@ docker-compose up --build
 - Refatorar para micro frontends
 
 ## Troubleshooting
-- Verifique variáveis `.env`
-- Backend deve estar rodando em `http://localhost:3000`
-- Use `pnpm` para instalar dependências
-- Para mobile, use Expo Go
+- Verifique variáveis `.env` - certifique-se que `EXPO_PUBLIC_API_BASE_URL` está configurado
+- Backend deve estar rodando em `http://localhost:3000` (ou a URL configurada no .env)
+- Use `npm install --legacy-peer-deps` para instalar dependências devido a conflitos de peer dependencies
+- Para mobile, use Expo Go app
+- Se tiver problemas com cache, use `npx expo start --clear`
 
 ## Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.

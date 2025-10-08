@@ -1,14 +1,42 @@
 import React from 'react';
-import { Button } from '@shared/components/Button';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreen from './screens/HomeScreen';
+import RestaurantScreen from './screens/RestaurantScreen';
 
-const BusinessApp: React.FC = () => {
-    return (
-        <div>
-            <h1>Business Application</h1>
-            <Button title="Entrar como Comerciante" />
-            {/* Additional components and logic can be added here */}
-        </div>
-    );
+export type RootStackParamList = {
+  Home: undefined;
+  Restaurant: { slug: string };
 };
 
-export default BusinessApp;
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#007AFF',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      >
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: 'Local Menu' }}
+        />
+        <Stack.Screen
+          name="Restaurant"
+          component={RestaurantScreen}
+          options={{ title: 'Menu' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}

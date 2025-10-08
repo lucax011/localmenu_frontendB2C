@@ -1,15 +1,31 @@
 module.exports = {
   root: true,
-  extends: ["@react-native-community", "plugin:react-hooks/recommended", "prettier"],
-  plugins: ["react", "react-hooks"],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 2021,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  extends: [
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+  ],
+  plugins: ['react', 'react-hooks', '@typescript-eslint'],
   env: {
-    "react-native/react-native": true,
     es6: true,
     node: true,
   },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
   rules: {
-    "prettier/prettier": ["error"],
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+    'react/prop-types': 'off',
+    'react/react-in-jsx-scope': 'off',
   },
 };
