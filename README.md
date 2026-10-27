@@ -4,6 +4,15 @@
 ## Descrição
 App React Native (Expo + TypeScript) para consumidores, rodando 100% local (sem cloud), com integração ao backend NestJS via Docker e pipeline Jenkins.
 
+## Ecossistema LocalMenu
+
+| Repositório | Papel |
+| --- | --- |
+| [localmenu_backend](https://github.com/lucax011/localmenu_backend) | API NestJS + PostgreSQL |
+| [localmenu_frontendB2C](https://github.com/lucax011/localmenu_frontendB2C) | App do cliente (Expo) |
+| [localmenu_frontendB2B](https://github.com/lucax011/localmenu_frontendB2B) | App do restaurante (Expo) |
+| [localmenu_OCRservice](https://github.com/lucax011/localmenu_OCRservice) | Microsserviço de OCR em Python (FastAPI) |
+
 ## Stack
 - React Native (Expo managed workflow, TypeScript)
 - Navegação: @react-navigation/native, stack/bottom-tabs
@@ -20,19 +29,11 @@ App React Native (Expo + TypeScript) para consumidores, rodando 100% local (sem 
 ## Estrutura de Pastas
 ```
 src/
-  app/           # Rotas e navegadores
-  screens/       # Telas principais
-  components/    # Componentes reutilizáveis
-  store/         # Zustand store
-  services/api/  # Axios, React Query, DTOs
-  hooks/         # Custom hooks
-  theme/         # Tema Paper
-  utils/         # Utilitários
-  types/         # Tipos globais
-  config/        # Configurações
-  mocks/         # Dados mockados
-  test/          # Testes unitários
-  e2e/           # Cypress E2E
+  screens/       Home (lista de restaurantes), Restaurant (cardápio com busca) e Login
+  services/api/  cliente Axios e chamadas de restaurantes
+  types/         tipos da API
+  utils/         filtro de busca de itens
+  __tests__/     testes unitários (Jest)
 ```
 
 ## Configuração

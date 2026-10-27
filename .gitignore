@@ -16,3 +16,4 @@ web-build/
 coverage
 .vscode
 .idea
+.env
