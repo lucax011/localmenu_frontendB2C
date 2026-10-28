@@ -1,32 +1,21 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "lib": ["esnext", "dom"],
-    "jsx": "react-native",
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
+    "target": "ES2020",
+    "module": "ESNext",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noImplicitAny": true,
+    "moduleResolution": "bundler",
+    "allowJs": false,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "noEmit": true,
-    "isolatedModules": true,
-    "strict": true,
-    "baseUrl": "./src",
+    "esModuleInterop": true,
+    "types": ["jest", "react", "react-native"],
+    "baseUrl": ".",
     "paths": {
-      "@app/*": ["app/*"],
-      "@screens/*": ["screens/*"],
-      "@components/*": ["components/*"],
-      "@store/*": ["store/*"],
-      "@services/*": ["services/*"],
-      "@hooks/*": ["hooks/*"],
-      "@theme/*": ["theme/*"],
-      "@utils/*": ["utils/*"],
-      "@types/*": ["types/*"],
-      "@config/*": ["config/*"],
-      "@mocks/*": ["mocks/*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "babel.config.js", "metro.config.js"]
+  "include": ["src", "App.tsx", "jest.setup.ts"],
+  "extends": "expo/tsconfig.base"
 }

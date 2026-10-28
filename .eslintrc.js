@@ -1,31 +1,44 @@
+/* ESLint do app do cliente: mesma base do app do restaurante */
 module.exports = {
   root: true,
+  env: {
+    es2021: true,
+    node: true,
+    jest: true,
+  },
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2021,
+    ecmaFeatures: { jsx: true },
+    ecmaVersion: 'latest',
     sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
-    },
-  },
-  extends: [
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
-  ],
-  plugins: ['react', 'react-hooks', '@typescript-eslint'],
-  env: {
-    es6: true,
-    node: true,
   },
   settings: {
-    react: {
-      version: 'detect',
-    },
+    react: { version: 'detect' },
   },
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'react-native'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:react-native/all',
+    'plugin:prettier/recommended',
+  ],
   rules: {
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
+    // Permitir 'any' durante a POC
+    '@typescript-eslint/no-explicit-any': 'off',
+    // Flexibilizações para POC
+    'react-native/no-inline-styles': 'off',
+    'react-native/no-color-literals': 'off',
+    'react-native/no-raw-text': 'off',
+
+    // Evita quebrar build por variáveis não usadas (ex.: watch, token etc.)
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+    ],
+
+    // RN + TSX
     'react/prop-types': 'off',
-    'react/react-in-jsx-scope': 'off',
   },
 };
