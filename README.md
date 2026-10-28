@@ -2,6 +2,10 @@
 
 App do cliente do LocalMenu, em React Native (Expo) e TypeScript. O cliente escolhe um restaurante, monta o pedido para retirada, paga (pagamento simulado) e acompanha o status até buscar no balcão. Roda 100% local, ligado ao [localmenu_backend](https://github.com/lucax011/localmenu_backend).
 
+| Restaurantes | Cardápio | Carrinho | Pagamento | Acompanhamento |
+| --- | --- | --- | --- | --- |
+| ![Restaurantes](docs/capturas/restaurantes.png) | ![Cardápio](docs/capturas/cardapio.png) | ![Carrinho](docs/capturas/carrinho.png) | ![Pagamento](docs/capturas/pagamento.png) | ![Acompanhamento](docs/capturas/acompanhamento.png) |
+
 ## Ecossistema LocalMenu
 
 | Repositório | Papel |
@@ -28,18 +32,20 @@ O preço nunca sai do app: o pedido leva só os itens e as quantidades, e a API 
 - React Navigation (stack, com endereços próprios na web)
 - React Query para dados da API, Zustand para sessão e carrinho (guardados no aparelho)
 - React Native Paper, react-hook-form + zod
-- Jest, ESLint, Prettier, Husky + lint-staged
+- Jest, Cypress (e2e contra a API local), ESLint, Prettier, Husky + lint-staged
 
 Mesma base do app do restaurante ([localmenu_frontendB2B](https://github.com/lucax011/localmenu_frontendB2B)).
 
 ## Como rodar
 
-Pré-requisito: a API rodando em `http://localhost:3000` (veja o README do backend; `docker compose up` lá sobe banco, OCR e API com dados de exemplo).
+Pré-requisito: a API rodando em `http://localhost:3000`. O README do [localmenu_backend](https://github.com/lucax011/localmenu_backend#subir-tudo-api-ocr-e-os-dois-apps) tem o passo a passo para subir tudo.
 
 ```sh
 npm install
 npm run web        # abre em http://localhost:8082
 ```
+
+O servidor de desenvolvimento fica preso a `127.0.0.1`: o `scripts/somente-localhost.cjs` impede que o Expo abra a porta para a rede. Para testar num celular pelo Expo Go, rode `npx expo start` direto, sabendo que a porta fica visível na rede local.
 
 A porta 8082 já está liberada no CORS da API (`CORS_ORIGINS` no `.env` do backend). Para apontar para outra API, copie `.env.example` para `.env` e ajuste `EXPO_PUBLIC_API_BASE_URL`.
 
@@ -49,11 +55,14 @@ Conta de exemplo: `cliente@localmenu.dev` / `localmenu123`. Também dá para cri
 
 | Comando | O que faz |
 | --- | --- |
-| `npm run web` | Expo Web na porta 8082 |
+| `npm run web` | Expo Web na porta 8082, só em 127.0.0.1 |
 | `npm test` | Testes unitários (carrinho, busca, horários, etapas do pedido) |
+| `npm run e2e` | Cypress contra a API local: a jornada inteira, da vitrine ao pedido pronto |
 | `npm run typecheck` | Checagem de tipos |
 | `npm run lint` | ESLint + Prettier |
 | `npm run build:web` | Gera o site estático em `dist/` |
+
+O e2e precisa da API e do app rodando. Ele cria uma conta e um pedido novos a cada execução.
 
 ## Estrutura
 
@@ -70,6 +79,7 @@ src/
   components/ui.tsx     peças visuais comuns
   utils/                carrinho, formatos e validação
   __tests__/            testes unitários
+cypress/e2e/            teste ponta a ponta
 ```
 
 ## Licença
