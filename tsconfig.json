@@ -17,5 +17,6 @@
     }
   },
   "include": ["src", "App.tsx", "jest.setup.ts"],
+  "exclude": ["cypress"],
   "extends": "expo/tsconfig.base"
 }

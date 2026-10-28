@@ -17,3 +17,7 @@ coverage
 .vscode
 .idea
 .env
+
+# Cypress
+cypress/screenshots/
+cypress/videos/

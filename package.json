@@ -4,17 +4,19 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "expo start",
+    "start": "node -r ./scripts/somente-localhost.cjs node_modules/expo/bin/cli start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web --port 8082",
+    "web": "node -r ./scripts/somente-localhost.cjs node_modules/expo/bin/cli start --web --port 8082",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch",
     "build:web": "expo export --platform web",
-    "postinstall": "husky"
+    "postinstall": "husky",
+    "e2e": "cypress run",
+    "e2e:open": "cypress open"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -61,6 +63,7 @@
     "@typescript-eslint/parser": "^7.18.0",
     "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^5.0.2",
+    "cypress": "^13.17.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.5.4",
