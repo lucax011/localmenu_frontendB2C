@@ -49,6 +49,46 @@ export const todayHours = (hours: OpeningHour[], now = new Date()) => {
   return `Hoje (${DAY_LABEL[now.getDay()]}): ${today.openTime}–${today.closeTime}`;
 };
 
+const DAY_NAME = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
+const toMinutes = (hhmm: string) => {
+  const [h, m] = hhmm.split(':').map(Number);
+  return h * 60 + m;
+};
+
+export type OpenStatus = { open: boolean; label: string };
+
+// "Aberto · fecha às 23:00" ou "Fechado · abre amanhã às 11:00".
+// Turno que passa da meia-noite (18:00–02:00) conta no dia em que começou.
+// null quando o restaurante não cadastrou horários.
+export const openStatus = (hours: OpeningHour[], now = new Date()): OpenStatus | null => {
+  if (!hours.length) return null;
+  const day = now.getDay();
+  const mins = now.getHours() * 60 + now.getMinutes();
+  const shift = (d: number) => hours.find((h) => h.dayOfWeek === DAY_KEYS[d % 7] && h.isOpen);
+  const overnight = (h: OpeningHour) => toMinutes(h.closeTime) <= toMinutes(h.openTime);
+
+  const yesterday = shift(day + 6);
+  if (yesterday && overnight(yesterday) && mins < toMinutes(yesterday.closeTime)) {
+    return { open: true, label: `Aberto · fecha às ${yesterday.closeTime}` };
+  }
+  const today = shift(day);
+  if (today) {
+    const opens = toMinutes(today.openTime);
+    if (mins >= opens && (overnight(today) || mins < toMinutes(today.closeTime))) {
+      return { open: true, label: `Aberto · fecha às ${today.closeTime}` };
+    }
+    if (mins < opens) return { open: false, label: `Fechado · abre às ${today.openTime}` };
+  }
+  for (let i = 1; i <= 7; i++) {
+    const next = shift(day + i);
+    if (next) {
+      const when = i === 1 ? 'amanhã' : DAY_NAME[(day + i) % 7];
+      return { open: false, label: `Fechado · abre ${when} às ${next.openTime}` };
+    }
+  }
+  return { open: false, label: 'Fechado' };
+};
+
 // Busca sem diferenciar maiúsculas nem acentos ("cafe" acha "Café")
 export const normalize = (text: string) =>
   text

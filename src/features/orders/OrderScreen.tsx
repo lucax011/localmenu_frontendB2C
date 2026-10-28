@@ -5,7 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../../App';
 import { errorMessage, getOrder } from '@/api/client';
-import { Empty, Panel, Screen, SectionTitle } from '@/components/ui';
+import { ActionBar, bigButton, Empty, Panel, Screen, SectionTitle } from '@/components/ui';
+import InstallBanner from '@/components/InstallBanner';
 import { useAuthStore } from '@/store/authStore';
 import {
   isOpenOrder,
@@ -64,19 +65,38 @@ export default function OrderScreen({ route, navigation }: Props) {
 
   const current = stepIndex(order.status);
 
+  const ready = order.status === 'READY';
+
   return (
-    <Screen refreshing={isRefetching} onRefresh={refetch}>
-      <Panel style={{ gap: 8 }}>
-        <View style={styles.row}>
-          <Text variant="titleMedium" style={styles.ink}>
-            {order.restaurant.name}
-          </Text>
-          <StatusChip status={order.status} />
-        </View>
-        <Text variant="displaySmall" style={styles.number}>
+    <Screen
+      refreshing={isRefetching}
+      onRefresh={refetch}
+      footer={
+        order.status === 'PENDING' && !order.payment ? (
+          <ActionBar>
+            <Button
+              mode="contained"
+              onPress={() => navigation.navigate('Payment', { orderId: order.id })}
+              {...bigButton}
+            >
+              {`Pagar ${money(order.total)}`}
+            </Button>
+          </ActionBar>
+        ) : undefined
+      }
+    >
+      {/* número grande para mostrar no balcão */}
+      <View style={[styles.ticket, ready && { backgroundColor: colors.ok }]}>
+        <Text style={styles.ticketLabel}>{ready ? 'Pronto! Mostre no balcão' : 'Seu pedido'}</Text>
+        <Text style={styles.number} accessibilityLabel={`Pedido número ${order.orderNumber}`}>
           #{order.orderNumber}
         </Text>
-        <Text variant="bodyMedium" style={{ color: colors.ink }}>
+        <Text style={styles.ticketPlace}>{order.restaurant.name}</Text>
+      </View>
+
+      <Panel style={{ gap: 8 }}>
+        <StatusChip status={order.status} />
+        <Text variant="bodyLarge" style={{ color: colors.ink }}>
           {HINT[order.status]}
         </Text>
         {order.restaurant.address ? (
@@ -84,44 +104,31 @@ export default function OrderScreen({ route, navigation }: Props) {
             Retirada: {order.restaurant.address}
           </Text>
         ) : null}
+
+        {order.status !== 'CANCELLED' && order.status !== 'PENDING' ? (
+          <View style={styles.track} accessibilityRole="progressbar">
+            {STATUS_STEPS.map((st, i) => {
+              const reached = i <= current;
+              return (
+                <View key={st} style={styles.stepCol}>
+                  <View style={[styles.bar, reached && { backgroundColor: colors.brand }]} />
+                  <Text
+                    style={[
+                      styles.stepText,
+                      reached && { color: colors.ink },
+                      i === current && { fontWeight: '700' },
+                    ]}
+                  >
+                    {STATUS_LABEL[st]}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+        ) : null}
       </Panel>
 
-      {order.status !== 'CANCELLED' && order.status !== 'PENDING' ? (
-        <Panel style={{ gap: 12 }}>
-          {STATUS_STEPS.map((s, i) => {
-            const reached = i <= current;
-            return (
-              <View key={s} style={styles.step}>
-                <View
-                  style={[
-                    styles.bullet,
-                    reached && { backgroundColor: colors.brand, borderColor: colors.brand },
-                  ]}
-                />
-                <Text
-                  variant="bodyMedium"
-                  style={{
-                    color: reached ? colors.ink : colors.muted,
-                    fontWeight: i === current ? '700' : '400',
-                  }}
-                >
-                  {STATUS_LABEL[s]}
-                </Text>
-              </View>
-            );
-          })}
-        </Panel>
-      ) : null}
-
-      {order.status === 'PENDING' && !order.payment ? (
-        <Button
-          mode="contained"
-          onPress={() => navigation.navigate('Payment', { orderId: order.id })}
-          contentStyle={{ paddingVertical: 6 }}
-        >
-          {`Pagar ${money(order.total)}`}
-        </Button>
-      ) : null}
+      {order.status !== 'PENDING' && order.status !== 'CANCELLED' ? <InstallBanner /> : null}
 
       <SectionTitle>Itens</SectionTitle>
       <Panel style={{ gap: 8 }}>
@@ -160,16 +167,15 @@ export default function OrderScreen({ route, navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  bullet: {
-    borderColor: colors.line,
-    borderRadius: 7,
-    borderWidth: 2,
-    height: 14,
-    width: 14,
-  },
+  bar: { backgroundColor: colors.line, borderRadius: 3, height: 6 },
   ink: { color: colors.ink, fontWeight: '700' },
-  number: { color: colors.ink, fontWeight: '800' },
+  number: { color: '#FFFFFF', fontSize: 56, fontWeight: '800', letterSpacing: 1 },
   row: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
-  step: { alignItems: 'center', flexDirection: 'row', gap: 10 },
+  stepCol: { flex: 1, gap: 6 },
+  stepText: { color: colors.muted, fontSize: 12 },
+  ticket: { alignItems: 'center', backgroundColor: colors.brand, borderRadius: 20, padding: 20 },
+  ticketLabel: { color: '#FFFFFF', fontSize: 14, fontWeight: '600', opacity: 0.9 },
+  ticketPlace: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
   totalRow: { borderTopColor: colors.line, borderTopWidth: 1, paddingTop: 8 },
+  track: { flexDirection: 'row', gap: 6, marginTop: 8 },
 });

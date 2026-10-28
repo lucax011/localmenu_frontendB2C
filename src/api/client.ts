@@ -14,6 +14,10 @@ export const API_BASE =
   (Constants?.expoConfig?.extra as { apiBaseUrl?: string } | undefined)?.apiBaseUrl ||
   'http://localhost:3000';
 
+// Fotos enviadas ao backend chegam como /static/…; as de fora já vêm com https://
+export const imageSrc = (url?: string | null) =>
+  !url ? undefined : url.startsWith('/') ? `${API_BASE}${url}` : url;
+
 export const api = axios.create({ baseURL: API_BASE, timeout: 1000 * 30 });
 
 api.interceptors.request.use((config) => {

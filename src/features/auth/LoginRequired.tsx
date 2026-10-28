@@ -6,10 +6,10 @@ import type { RootStackParamList } from '../../../App';
 import { Empty, Screen } from '@/components/ui';
 
 // Mostrado nas telas de pedido quando ninguém está logado (ex.: link aberto direto no navegador)
-export default function LoginRequired() {
+export default function LoginRequired({ footer }: { footer?: React.ReactNode }) {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   return (
-    <Screen>
+    <Screen footer={footer}>
       <Empty
         title="Entre para ver seus pedidos"
         text="Seus pedidos ficam guardados na sua conta."

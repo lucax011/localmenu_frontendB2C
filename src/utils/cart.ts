@@ -11,12 +11,17 @@ export type CartLine = {
   name: string;
   price: number;
   quantity: number;
+  imageUrl?: string | null;
 };
 
-export const addLine = (lines: CartLine[], item: Pick<MenuItem, 'id' | 'name' | 'price'>) => {
+export const addLine = (
+  lines: CartLine[],
+  item: Pick<MenuItem, 'id' | 'name' | 'price' | 'imageUrl'>
+) => {
   const found = lines.find((l) => l.itemId === item.id);
   if (!found) {
-    return [...lines, { itemId: item.id, name: item.name, price: item.price, quantity: 1 }];
+    const line = { itemId: item.id, name: item.name, price: item.price, quantity: 1 };
+    return [...lines, item.imageUrl ? { ...line, imageUrl: item.imageUrl } : line];
   }
   return setLineQty(lines, item.id, found.quantity + 1);
 };

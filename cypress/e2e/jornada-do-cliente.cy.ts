@@ -9,10 +9,12 @@ describe('Jornada do cliente', () => {
     cy.contains('Peça para retirar');
     cy.contains('Brasa Burger').click();
     cy.contains('Brasa Clássico');
-    cy.contains('[role=button]', 'Adicionar').first().click();
+    cy.get('[aria-label="Adicionar Brasa Clássico"]').click();
     cy.get('input[placeholder="Buscar no cardápio"]').type('batata');
     cy.contains('Brasa Clássico').should('not.exist');
-    cy.contains('[role=button]', 'Adicionar').first().click();
+    // pelo detalhe do prato, que sobe de baixo
+    cy.contains('Batata rústica').click();
+    cy.contains('[role=button]', 'Adicionar · R$ 18,00').click();
 
     // Carrinho
     cy.contains('Ver carrinho · 2 itens · R$ 50,90').click();

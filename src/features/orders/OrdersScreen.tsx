@@ -1,12 +1,12 @@
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Button, Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { useQuery } from '@tanstack/react-query';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../../App';
 import { errorMessage, getMyOrders } from '@/api/client';
 import type { Order } from '@/api/types';
-import { Empty, Panel, Screen, SectionTitle } from '@/components/ui';
+import { BottomBar, Empty, Panel, Screen, SectionTitle, SkeletonList } from '@/components/ui';
 import { useAuthStore } from '@/store/authStore';
 import { isOpenOrder, money, shortDate } from '@/utils/format';
 import { colors } from '@/theme';
@@ -26,7 +26,8 @@ export default function OrdersScreen({ navigation }: Props) {
     refetchInterval: 10000,
   });
 
-  if (!logged) return <LoginRequired />;
+  const tabs = <BottomBar current="orders" />;
+  if (!logged) return <LoginRequired footer={tabs} />;
 
   const all = data ?? [];
   const open = all.filter((o) => isOpenOrder(o.status));
@@ -54,13 +55,13 @@ export default function OrdersScreen({ navigation }: Props) {
   );
 
   return (
-    <Screen refreshing={isRefetching} onRefresh={refetch}>
+    <Screen refreshing={isRefetching} onRefresh={refetch} footer={tabs}>
       {user ? (
         <Text variant="bodyMedium" style={{ color: colors.muted }}>
           Olá, {user.name.split(' ')[0]}.
         </Text>
       ) : null}
-      {isLoading ? <ActivityIndicator style={{ marginTop: 24 }} /> : null}
+      {isLoading ? <SkeletonList count={3} height={88} /> : null}
       {error ? <Empty title="Não deu para carregar" text={errorMessage(error)} /> : null}
       {data && !all.length ? (
         <>
