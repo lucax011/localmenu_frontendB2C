@@ -12,7 +12,12 @@ export const colors = {
   ok: '#047857',
   warn: '#B45309',
   danger: '#B91C1C',
+  brandSoft: '#FFEDD5',
+  sand: '#F5EDE4',
 };
+
+// Medidas do layout mobile-first: toque mínimo de 44 px e coluna de até 760 px
+export const layout = { touch: 44, maxWidth: 760, gutter: 16, radius: 16 };
 
 export const theme = {
   ...MD3LightTheme,

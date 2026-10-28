@@ -8,7 +8,16 @@ export default ({ config }: any) => ({
   scheme: 'localmenu',
   orientation: 'portrait',
   ios: { supportsTablet: true },
-  web: { bundler: 'metro', output: 'single' },
+  // PWA: public/index.html, public/manifest.webmanifest e public/sw.js completam a parte web
+  web: {
+    bundler: 'metro',
+    output: 'single',
+    lang: 'pt-BR',
+    name: 'LocalMenu',
+    shortName: 'LocalMenu',
+    themeColor: '#C2410C',
+    backgroundColor: '#FBF7F2',
+  },
   extra: {
     apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000',
     eas: { projectId: 'localmenu-b2c-local' },

@@ -6,7 +6,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../../App';
 import { errorMessage, getOrder, payOrder } from '@/api/client';
 import type { PaymentMethod } from '@/api/types';
-import { Empty, Panel, Screen } from '@/components/ui';
+import { ActionBar, bigButton, Empty, Panel, Screen } from '@/components/ui';
 import { useAuthStore } from '@/store/authStore';
 import { money, PAYMENT_LABEL } from '@/utils/format';
 import { colors } from '@/theme';
@@ -58,7 +58,34 @@ export default function PaymentScreen({ route, navigation }: Props) {
   const payable = order.status === 'PENDING' && !order.payment;
 
   return (
-    <Screen>
+    <Screen
+      footer={
+        payable ? (
+          <ActionBar>
+            {error ? (
+              <HelperText type="error" visible>
+                {error}
+              </HelperText>
+            ) : null}
+            <Button
+              mode="contained"
+              onPress={() => {
+                setError(null);
+                pay.mutate();
+              }}
+              loading={pay.isPending}
+              disabled={pay.isPending}
+              {...bigButton}
+            >
+              {`Pagar ${money(order.total)}`}
+            </Button>
+            <Button onPress={() => navigation.replace('Order', { id: orderId })}>
+              Pagar depois
+            </Button>
+          </ActionBar>
+        ) : undefined
+      }
+    >
       <Panel style={{ gap: 4 }}>
         <Text variant="labelLarge" style={{ color: colors.ok }}>
           Pedido #{order.orderNumber} criado
@@ -88,22 +115,6 @@ export default function PaymentScreen({ route, navigation }: Props) {
               Pagamento simulado: nenhum valor é cobrado. Ao pagar, o pedido vai para o restaurante.
             </Text>
           </View>
-          <HelperText type="error" visible={!!error}>
-            {error}
-          </HelperText>
-          <Button
-            mode="contained"
-            onPress={() => {
-              setError(null);
-              pay.mutate();
-            }}
-            loading={pay.isPending}
-            disabled={pay.isPending}
-            contentStyle={{ paddingVertical: 6 }}
-          >
-            {`Pagar ${money(order.total)}`}
-          </Button>
-          <Button onPress={() => navigation.replace('Order', { id: orderId })}>Pagar depois</Button>
         </>
       ) : (
         <>

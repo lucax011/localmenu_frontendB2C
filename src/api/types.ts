@@ -25,6 +25,10 @@ export type RestaurantSummary = {
   description?: string | null;
   address?: string | null;
   phone?: string | null;
+  // fotos: https://… ou /static/… (relativo à API, ver imageSrc)
+  logoUrl?: string | null;
+  coverUrl?: string | null;
+  hours: OpeningHour[];
   menuId: string | null;
 };
 
@@ -44,6 +48,7 @@ export type MenuItem = {
   description?: string | null;
   price: number;
   isAvailable: boolean;
+  imageUrl?: string | null;
 };
 
 export type MenuCategory = {
@@ -55,7 +60,7 @@ export type MenuCategory = {
 
 // GET /public/r/:slug
 export type PublicRestaurant = {
-  restaurant: Omit<RestaurantSummary, 'menuId'> & { hours: OpeningHour[] };
+  restaurant: Omit<RestaurantSummary, 'menuId'>;
   menu: { id: string; name: string; categories: MenuCategory[] } | null;
 };
 
